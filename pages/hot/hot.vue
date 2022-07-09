@@ -10,9 +10,20 @@
 </template>
 
 <script>
+import { HotTabs } from '@/api/hot.js';
+
 export default {
 	data() {
 		return {};
+	},
+	created() {
+		this.getHotTabs();
+	},
+	methods: {
+		async getHotTabs() {
+			const { data } = await HotTabs();
+			console.log(data);
+		}
 	}
 };
 </script>
