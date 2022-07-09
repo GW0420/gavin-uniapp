@@ -1,5 +1,5 @@
 <template>
-  <view class="container"> 33333</view>
+  <view class="container">33333</view>
 </template>
 
 <script>
@@ -8,8 +8,10 @@ export default {
     return {
       href: 'https://uniapp.dcloud.io/component/README?id=uniui'
     }
-  },
-  methods: {}
+  }, 
+  methods: {
+	  
+  }
 }
 </script>
 
