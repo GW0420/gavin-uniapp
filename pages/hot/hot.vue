@@ -2,9 +2,15 @@
 	<view class="hot-container">
 		<!-- logo -->
 		<image class="logo" src="@/static/images/logo.png" mode="aspectFit"></image>
+		<!-- hot search -->
 		<view class="search-box">
 			<!-- 搜索模块 -->
 			<hot-search placeholderText="uni-app 自定义组件" />
+		</view>
+		<!-- hot tabs -->
+		<view class="tabs-box">
+			<!-- 滑动模块 -->
+			<hot-tabs :tabData="tabData" defaultIndex="0"></hot-tabs>
 		</view>
 	</view>
 </template>
@@ -14,7 +20,10 @@ import { HotTabs } from '@/api/hot.js';
 
 export default {
 	data() {
-		return {};
+		return {
+			tabData: [],
+			defaultIndex: 0
+		};
 	},
 	created() {
 		this.getHotTabs();
@@ -22,7 +31,7 @@ export default {
 	methods: {
 		async getHotTabs() {
 			const { data } = await HotTabs();
-			console.log(data);
+			this.tabData = data.list;
 		}
 	}
 };
