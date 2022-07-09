@@ -10,7 +10,7 @@
 		<!-- hot tabs -->
 		<view class="tabs-box">
 			<!-- 滑动模块 -->
-			<hot-tabs :tabData="tabData" defaultIndex="0"></hot-tabs>
+			<hot-tabs :tabData="tabData" :defaultIndex="currentIndex"></hot-tabs>
 		</view>
 	</view>
 </template>
@@ -22,7 +22,7 @@ export default {
 	data() {
 		return {
 			tabData: [],
-			defaultIndex: 0
+			currentIndex: 0
 		};
 	},
 	created() {

@@ -68,6 +68,7 @@ export default {
 		// 监听激活项目的变化
 		defaultIndex: {
 			handler(val) {
+				console.log(val);
 				this.activeIndex = val;
 			},
 			// 该回调将会在侦听开始之后被立即调用
