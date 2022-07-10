@@ -7,13 +7,16 @@
 	 -->
 	<view class="tab-container">
 		<view class="tab-box">
-			<scroll-view id="_scroll" class="scroll-view" scroll-x scroll-with-animation>
+			<scroll-view id="_scroll" class="scroll-view" scroll-x scroll-with-animation :scroll-left="scrollLeft">
 				<view class="scroll-content">
 					<view class="tab-item-box">
 						<block v-for="(item, index) in tabData" :key="index">
 							<view
 								:id="'_tab_' + index"
 								:class="['tab-item', { 'tab-color': activeIndex === index }]"
+								:style="{
+									color: activeIndex === index ? defaultConfig.activeTextColor : defaultConfig.textColor
+								}"
 								@click="onTabsClick(index)"
 							>
 								{{ item.label || item }}
@@ -77,13 +80,19 @@ export default {
 			tabList: [],
 			// 默认配置
 			defaultConfig: {
+				// 默认的字体颜色
+				textColor: '#333333',
+				// 高亮字体颜色
+				activeTextColor: '#f94d2a',
 				// 下划线宽度 px
 				underLineWidth: 24,
 				// 下划线高度 px
 				underLineHeight: 2,
 				// 下划线颜色
 				underLineColor: '#f94d2a'
-			}
+			},
+			// scrollView 的横向滚动条位置
+			scrollLeft: 0
 		};
 	},
 	methods: {
@@ -109,6 +118,8 @@ export default {
 				//    3.1. 计算公式：`滑块左侧位置 = item.left + (item.width - slider.width) / 2`
 				left: this.tabList[activeIndex]._slider.left
 			};
+			// 控制scrollView 进行横向的滚动
+			this.scrollLeft = this.activeIndex * this.defaultConfig.underLineWidth;
 		},
 		// 更新 tab item 的宽度
 		updateTabWidth() {
@@ -154,6 +165,14 @@ export default {
 		defaultIndex: {
 			handler(val) {
 				this.activeIndex = val;
+			},
+			// 该回调将会在侦听开始之后被立即调用
+			immediate: true
+		},
+		// 监听 config
+		config: {
+			handler(val) {
+				this.defaultConfig = { ...this.defaultConfig, ...val };
 			},
 			// 该回调将会在侦听开始之后被立即调用
 			immediate: true
