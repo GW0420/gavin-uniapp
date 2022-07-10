@@ -12,16 +12,26 @@
 			<!-- 滑动模块 -->
 			<hot-tabs :tabData="tabData" :defaultIndex="currentIndex" @tabClick="tabClick"></hot-tabs>
 		</view>
-		<!-- hot 视图 -->
-		<view class="list">
-			<!-- 加载动画 -->
-			<uni-load-more status="loading" v-if="isLoading"></uni-load-more>
-			<!-- 列表 -->
-			<block v-else>
-				<!-- list-item -->
-				<hot-list-item v-for="(item, index) in listData[currentIndex]" :key="index" :data="item" :ranking="index + 1"></hot-list-item>
-			</block>
-		</view>
+		<!-- 基于swiper的list列表 -->
+		<swiper class="swiper" :style="{ height: currentSwiperHeight + 'px' }" :current="currentIndex">
+			<swiper-item class="swiper-item" v-for="(tabItem, tabIndex) in tabData" :key="tabIndex">
+				<view class="list">
+					<!-- 加载动画 -->
+					<uni-load-more status="loading" v-if="isLoading"></uni-load-more>
+					<!-- 列表 -->
+					<block v-else>
+						<!-- list-item -->
+						<hot-list-item
+							:class="'hot-list-item-' + tabIndex"
+							v-for="(item, index) in listData[tabIndex]"
+							:key="index"
+							:data="item"
+							:ranking="index + 1"
+						></hot-list-item>
+					</block>
+				</view>
+			</swiper-item>
+		</swiper>
 	</view>
 </template>
 
@@ -34,7 +44,9 @@ export default {
 			tabData: [],
 			currentIndex: 0,
 			isLoading: true,
-			listData: {} //  以 index 为 key，对应的 list 为 val
+			listData: {}, //  以 index 为 key，对应的 list 为 val
+			currentSwiperHeight: 0, // 当前 swiper的高度
+			swiperHeightData: {} // 以 index 为 key, 对应的 swiper 的高度为 val
 		};
 	},
 	created() {
@@ -56,19 +68,41 @@ export default {
 			if (!this.listData[this.currentIndex]) {
 				// 获取列表数据
 				const id = this.tabData[this.currentIndex].id;
-				const { data: res } = await HotListFromTabType(id);
+				const { data } = await HotListFromTabType(id);
 				// 放入数据缓存
-				this.listData[this.currentIndex] = res.list;
+				this.listData[this.currentIndex] = data.list;
 			}
-
 			// 隐藏 loading
 			this.isLoading = false;
+			// 获取swiper总高度
+			setTimeout(async () => {
+				// 获取当前 swiper 的高度
+				this.currentSwiperHeight = await this.getCurrentSwiperHeight();
+				// 放入缓存
+				this.swiperHeightData[this.currentIndex] = this.currentSwiperHeight;
+			}, 0);
 		},
 		// tab item点击事件
 		tabClick(index) {
 			this.currentIndex = index;
 			// 获取列表数据
 			this.getHotListFromTab();
+		},
+		// 计算当前 swiper的高度
+		getCurrentSwiperHeight() {
+			return new Promise((resolve, reject) => {
+				let sum = 0;
+				const query = uni.createSelectorQuery().in(this);
+				query
+					.selectAll(`.hot-list-item-${this.currentIndex}`)
+					.boundingClientRect(res => {
+						res.forEach(item => {
+							sum += item.height;
+						});
+						resolve(sum);
+					})
+					.exec();
+			});
 		}
 	}
 };
