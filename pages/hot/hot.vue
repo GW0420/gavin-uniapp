@@ -12,6 +12,11 @@
 			<!-- 滑动模块 -->
 			<hot-tabs :tabData="tabData" :defaultIndex="currentIndex"></hot-tabs>
 		</view>
+		<!-- hot 视图 -->
+		<view class="list">
+			<!-- list -->
+			<hot-list-item v-for="(item, index) in 50" :key="index"></hot-list-item>
+		</view>
 	</view>
 </template>
 
