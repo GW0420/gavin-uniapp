@@ -13,7 +13,7 @@
 			<hot-tabs :tabData="tabData" :defaultIndex="currentIndex" @tabClick="tabClick"></hot-tabs>
 		</view>
 		<!-- 基于swiper的list列表 -->
-		<swiper class="swiper" :style="{ height: currentSwiperHeight + 'px' }" :current="currentIndex">
+		<swiper class="swiper" :style="{ height: currentSwiperHeight + 'px' }" :current="currentIndex" @animationfinish="onSwiperEnd">
 			<swiper-item class="swiper-item" v-for="(tabItem, tabIndex) in tabData" :key="tabIndex">
 				<view class="list">
 					<!-- 加载动画 -->
@@ -64,14 +64,13 @@ export default {
 		async getHotListFromTab() {
 			// 展示 loading
 			this.isLoading = true;
-			// 判断缓存是否有数据，不存在则重新获取数据
-			if (!this.listData[this.currentIndex]) {
-				// 获取列表数据
-				const id = this.tabData[this.currentIndex].id;
-				const { data } = await HotListFromTabType(id);
-				// 放入数据缓存
-				this.listData[this.currentIndex] = data.list;
-			}
+
+			// 获取列表数据
+			const id = this.tabData[this.currentIndex].id;
+			const { data } = await HotListFromTabType(id);
+			// 放入数据缓存
+			this.listData[this.currentIndex] = data.list;
+
 			// 隐藏 loading
 			this.isLoading = false;
 			// 获取swiper总高度
@@ -86,7 +85,7 @@ export default {
 		tabClick(index) {
 			this.currentIndex = index;
 			// 获取列表数据
-			this.getHotListFromTab();
+			// this.getHotListFromTab();
 		},
 		// 计算当前 swiper的高度
 		getCurrentSwiperHeight() {
@@ -103,6 +102,17 @@ export default {
 					})
 					.exec();
 			});
+		},
+		// 解决卡顿问题；等待 swiper 动画完成之后，获取数据
+		onSwiperEnd() {
+			// 判断缓存是否有数据，不存在则重新获取数据
+			if (!this.listData[this.currentIndex]) {
+				// 获取列表数据
+				this.getHotListFromTab();
+				return;
+			}
+			// 未 return ，则证明存在缓存数据，即同时存在 height 的缓存数据
+			this.currentSwiperHeight = this.swiperHeightData[this.currentIndex];
 		}
 	}
 };
