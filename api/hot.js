@@ -7,3 +7,15 @@ export const HotTabs = () => {
 		get: 'GET'
 	});
 }
+
+/**
+ * 热搜文章列表
+ */
+export function HotListFromTabType(type) {
+	return request({
+		url: '/hot/list',
+		data: {
+			type
+		}
+	});
+}
