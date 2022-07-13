@@ -13,7 +13,7 @@
 					<!-- 热度 -->
 					<view class="hot-box">
 						<image class="hot-icon" src="@/static/images/hot-icon.png" />
-						<text class="hot-text">{{ data.views }} 热度</text>
+						<text class="hot-text">{{ $hotNumber(data.views) }} 热度</text>
 					</view>
 				</view>
 			</view>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { hotNumber } from '@/filters/index.js';
+
 export default {
 	name: 'hot-list-item',
 	props: {

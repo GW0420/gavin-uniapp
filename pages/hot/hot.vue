@@ -13,7 +13,13 @@
 			<hot-tabs :tabData="tabData" :defaultIndex="currentIndex" @tabClick="tabClick"></hot-tabs>
 		</view>
 		<!-- 基于swiper的list列表 -->
-		<swiper class="swiper" :style="{ height: currentSwiperHeight + 'px' }" :current="currentIndex" @animationfinish="onSwiperEnd">
+		<swiper
+			class="swiper"
+			:style="{ height: currentSwiperHeight + 'px' }"
+			:current="currentIndex"
+			@animationfinish="onSwiperEnd"
+			@change="onSwiperChange"
+		>
 			<swiper-item class="swiper-item" v-for="(tabItem, tabIndex) in tabData" :key="tabIndex">
 				<view class="list">
 					<!-- 加载动画 -->
@@ -46,7 +52,8 @@ export default {
 			isLoading: true,
 			listData: {}, //  以 index 为 key，对应的 list 为 val
 			currentSwiperHeight: 0, // 当前 swiper的高度
-			swiperHeightData: {} // 以 index 为 key, 对应的 swiper 的高度为 val
+			swiperHeightData: {}, // 以 index 为 key, 对应的 swiper 的高度为 val
+			currentPageScrollTop: 0 // 当前的滚动距离
 		};
 	},
 	created() {
@@ -113,6 +120,26 @@ export default {
 			}
 			// 未 return ，则证明存在缓存数据，即同时存在 height 的缓存数据
 			this.currentSwiperHeight = this.swiperHeightData[this.currentIndex];
+		},
+		// 监听 swiper 的切换事件
+		onSwiperChange(e) {
+			console.log(e);
+			this.currentIndex = e.detail.current;
+		},
+		// 监听页面的滚动
+		onPageScroll(res) {
+			this.currentPageScrollTop = res.scrollTop;
+		},
+
+		// 监听 swiper 的切换事件
+		onSwiperChange(e) {
+			if (this.currentPageScrollTop > 130) {
+				// 控制列表滚动位置
+				uni.pageScrollTo({
+					scrollTop: 130
+				});
+			}
+			this.currentIndex = e.detail.current;
 		}
 	}
 };
@@ -121,6 +148,7 @@ export default {
 <style lang="scss" scoped>
 .hot-container {
 	background: $uni-bg-color;
+	word-break: break-all;
 	.logo {
 		width: 100%;
 		height: 80px;
@@ -128,6 +156,12 @@ export default {
 	.search-box {
 		padding: 0 16px;
 		margin-bottom: $uni-spacing-col-base;
+	}
+	.tabs-box {
+		position: -webkit-sticky;
+		position: sticky;
+		z-index: 99;
+		top: 0;
 	}
 }
 </style>

@@ -15,7 +15,8 @@
 								:id="'_tab_' + index"
 								:class="['tab-item', { 'tab-color': activeIndex === index }]"
 								:style="{
-									color: activeIndex === index ? defaultConfig.activeTextColor : defaultConfig.textColor
+									color:
+										activeIndex === index ? defaultConfig.activeTextColor : defaultConfig.textColor
 								}"
 								@click="onTabsClick(index)"
 							>
@@ -142,6 +143,8 @@ export default {
 		defaultIndex: {
 			handler(val) {
 				this.activeIndex = val;
+				// 定义滑块的位置
+				this.tabToIndex();
 			},
 			immediate: true
 		},
