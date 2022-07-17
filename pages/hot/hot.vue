@@ -3,7 +3,7 @@
 		<!-- logo -->
 		<image class="logo" src="@/static/images/logo.png" mode="aspectFit"></image>
 		<!-- hot search -->
-		<view class="search-box">
+		<view class="search-box" @click="onToSearch">
 			<!-- 搜索模块 -->
 			<hot-search placeholderText="uni-app 自定义组件" />
 		</view>
@@ -121,16 +121,10 @@ export default {
 			// 未 return ，则证明存在缓存数据，即同时存在 height 的缓存数据
 			this.currentSwiperHeight = this.swiperHeightData[this.currentIndex];
 		},
-		// 监听 swiper 的切换事件
-		onSwiperChange(e) {
-			console.log(e);
-			this.currentIndex = e.detail.current;
-		},
 		// 监听页面的滚动
 		onPageScroll(res) {
 			this.currentPageScrollTop = res.scrollTop;
 		},
-
 		// 监听 swiper 的切换事件
 		onSwiperChange(e) {
 			if (this.currentPageScrollTop > 130) {
@@ -140,6 +134,12 @@ export default {
 				});
 			}
 			this.currentIndex = e.detail.current;
+		},
+		// 搜索框点击事件
+		onToSearch() {
+			uni.navigateTo({
+				url: '/subpkg/pages/search-blog/search-blog'
+			});
 		}
 	}
 };
@@ -147,7 +147,6 @@ export default {
 
 <style lang="scss" scoped>
 .hot-container {
-	background: $uni-bg-color;
 	word-break: break-all;
 	.logo {
 		width: 100%;
@@ -155,13 +154,14 @@ export default {
 	}
 	.search-box {
 		padding: 0 16px;
-		margin-bottom: $uni-spacing-col-base;
+		margin-bottom: 10px;
 	}
 	.tabs-box {
 		position: -webkit-sticky;
 		position: sticky;
 		z-index: 99;
 		top: 0;
+		margin-bottom: 10px;
 	}
 }
 </style>

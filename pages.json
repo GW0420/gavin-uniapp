@@ -21,6 +21,17 @@
 			}
 		}
 	],
+	"subPackages": [{
+		"root": "subpkg",
+		"name": "sub-1",
+		"pages": [{
+			"path": "pages/search-blog/search-blog",
+			"style": {
+				"navigationBarTitleText": "文章搜索",
+				"enablePullDownRefresh": false
+			}
+		}]
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

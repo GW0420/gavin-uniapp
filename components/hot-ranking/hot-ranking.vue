@@ -30,8 +30,8 @@ export default {
 .ranking {
 	position: relative;
 	text-align: center;
-	width: 18px;
-	height: 20px;
+	width: 25px;
+	height: 25px;
 	.ranking-bg {
 		width: 100%;
 		height: 100%;
@@ -41,8 +41,9 @@ export default {
 		left: 50%;
 		top: 50%;
 		transform: translate(-55%, -55%);
-		font-size: 12px;
+		font-size: 10px;
 		font-weight: bold;
+		text-align: center;
 		color: #333;
 	}
 	.text-white {

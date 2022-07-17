@@ -163,7 +163,7 @@ export default {
 	font-size: 14px;
 	height: 45px;
 	line-height: 45px;
-	background-color: #f7f7f7;
+	background-color: #fff;
 	.tab-box {
 		width: 100%;
 		height: 45px;
