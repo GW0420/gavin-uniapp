@@ -20,6 +20,7 @@
 				"enablePullDownRefresh": false
 			}
 		}
+
 	],
 	"subPackages": [{
 		"root": "subpkg",
@@ -27,7 +28,7 @@
 		"pages": [{
 			"path": "pages/search-blog/search-blog",
 			"style": {
-				"navigationBarTitleText": "文章搜索",
+				"navigationBarTitleText": "慕课热搜",
 				"enablePullDownRefresh": false
 			}
 		}]

@@ -297,7 +297,6 @@ $uni-searchbar-height: 36px;
 .uni-searchbar__text-placeholder {
 	font-size: 14px;
 	color: #b3b3b3;
-	margin-left: 5px;
 }
 
 .uni-searchbar__cancel {
