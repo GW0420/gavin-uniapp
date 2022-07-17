@@ -18,7 +18,9 @@
 			></hot-search>
 		</view>
 		<!-- 热搜列表 -->
-		<view class="search-hot-list-box card" v-if="showType === HOT_LIST"><search-hot-list /></view>
+		<view class="search-hot-list-box card" v-if="showType === HOT_LIST">
+			<search-hot-list @onSearch="onSearchConfirm" />
+		</view>
 		<!-- 搜索历史 -->
 		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY"><search-history /></view>
 		<!-- 搜索结果 -->
@@ -68,6 +70,7 @@ export default {
 			if (this.searchVal) {
 				this.showType = SEARCH_RESULT;
 			}
+			console.log(this.searchVal);
 		},
 		// searchbar 获取焦点
 		onSearchFocus(val) {
