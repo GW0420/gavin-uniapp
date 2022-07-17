@@ -18,10 +18,7 @@
 			></hot-search>
 		</view>
 		<!-- 热搜列表 -->
-		<view class="search-hot-list-box" v-if="showType === HOT_LIST">
-			<!-- 列表 -->
-			<search-hot-list />
-		</view>
+		<view class="search-hot-list-box card" v-if="showType === HOT_LIST"><search-hot-list /></view>
 		<!-- 搜索历史 -->
 		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY"><search-history /></view>
 		<!-- 搜索结果 -->

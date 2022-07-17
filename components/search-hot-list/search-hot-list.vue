@@ -1,14 +1,68 @@
 <template>
-	<view>热搜列表</view>
+	<view class="search-hot-list-container">
+		<!-- 标题 -->
+		<view class="search-hot-title">慕课热搜 - 全网技术 一网打尽</view>
+		<block v-for="(item, index) in hotList" :key="index">
+			<view class="search-hot-item">
+				<!-- 序号 -->
+				<hot-ranking :ranking="index + 1"></hot-ranking>
+				<!-- 文本 -->
+				<text class="title line-clamp">{{ item.label }}</text>
+				<!-- hot-icon -->
+				<image v-if="index <= 2" class="search-hot-icon" src="/static/images/hot-icon.png" />
+			</view>
+		</block>
+	</view>
 </template>
 
 <script>
+import { SearchHotList } from '@/api/search.js';
 export default {
 	name: 'search-hot-list',
 	data() {
-		return {};
+		return {
+			hotList: []
+		};
+	},
+	created() {
+		this.getSearchHotList();
+	},
+	methods: {
+		/**
+		 * 获取热搜列表数据
+		 */
+		async getSearchHotList() {
+			const { data: res } = await SearchHotList();
+			this.hotList = res.list;
+			console.log(this.hotList);
+		}
 	}
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.search-hot-list-container {
+	.search-hot-title {
+		font-weight: bold;
+		font-size: 12px;
+		color: #ff0000;
+		padding: 12px;
+		margin: -12px -12px 12px -12px;
+		box-shadow: 2px 2px 5px 1px rgba(143, 143, 143, 0.1);
+	}
+	.search-hot-item {
+		display: flex;
+		align-items: center;
+		padding: 12px 0;
+		.title {
+			color: #000000;
+			font-size: 12px;
+			margin: 0 10px;
+		}
+		.search-hot-icon {
+			width: 14px;
+			height: 14px;
+		}
+	}
+}
+</style>
