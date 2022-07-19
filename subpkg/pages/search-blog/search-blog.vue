@@ -22,7 +22,9 @@
 			<search-hot-list @onSearch="onSearchConfirm" />
 		</view>
 		<!-- 搜索历史 -->
-		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY"><search-history /></view>
+		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY">
+			<search-history :searchData="searchData" />
+		</view>
 		<!-- 搜索结果 -->
 		<view class="search-result-box" v-else><search-result-list /></view>
 	</view>
@@ -46,7 +48,9 @@ export default {
 			SEARCH_HISTORY,
 			SEARCH_RESULT,
 			// 展示内容
-			showType: HOT_LIST
+			showType: HOT_LIST,
+			// 搜索历史数据
+			searchData: []
 		};
 	},
 	created() {
@@ -63,16 +67,32 @@ export default {
 		/**
 		 * 搜索内容
 		 */
-		onSearchConfirm(val) {
+		onSearchConfirm() {
+			console.log('this.searchVal.length', this.searchVal.length);
 			// 用户未输入文本，直接搜索时，使用推荐搜索文本
-			this.searchVal = val ? val : this.defaultText;
-			// 用户输入文本
+			this.searchVal = this.searchVal.length > 0 ? this.searchVal : this.defaultText;
+			// 保存搜索历史数据
+			this.saveSearchData();
+			// 切换视图
 			if (this.searchVal) {
 				this.showType = SEARCH_RESULT;
 			}
-			console.log(this.searchVal);
 		},
-		// searchbar 获取焦点
+		/**
+		 * 保存搜索历史数据
+		 */
+		saveSearchData() {
+			// 1. 如果数据已存在，则删除
+			const index = this.searchData.findIndex(item => item === this.searchVal);
+			if (index > -1) {
+				this.searchData.splice(index, 1);
+			}
+			// 2. 新的搜索内容需要先于旧的搜索内容展示
+			this.searchData.unshift(this.searchVal);
+		},
+		/**
+		 * searchbar 获取焦点
+		 */
 		onSearchFocus(val) {
 			this.showType = SEARCH_HISTORY;
 		},
@@ -95,9 +115,7 @@ export default {
 		/**
 		 *  value 改变时触发事件
 		 */
-		onSearchInput(val) {
-			console.log(val);
-		}
+		onSearchInput(val) {}
 	}
 };
 </script>
