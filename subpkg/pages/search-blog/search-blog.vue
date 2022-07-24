@@ -23,15 +23,10 @@
 		</view>
 		<!-- 搜索历史 -->
 		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY">
-			<search-history
-				:searchData="searchData"
-				@removeAllSearchData="onRemoveAllSearchData"
-				@removeSearchData="onRemoveSearchData"
-				@onItemClick="onSearchConfirm"
-			/>
+			<search-history :searchData="searchData" @onItemClick="onSearchConfirm" />
 		</view>
 		<!-- 搜索结果 -->
-		<view class="search-result-box" v-else><search-result-list /></view>
+		<view class="search-result-box" v-else><search-result-list :queryStr="searchVal" /></view>
 	</view>
 </template>
 
@@ -55,15 +50,15 @@ export default {
 			SEARCH_HISTORY,
 			SEARCH_RESULT,
 			// 展示内容
-			showType: HOT_LIST,
+			showType: HOT_LIST
 			// 搜索历史数据
-			searchData: []
+			// searchData: []
 		};
 	},
 	computed: {
 		// 2. 在 computed 中，通过 mapState 函数，注册 state 中的数据，导入之后的数据可直接使用（就像使用 data 中的数据一样）
 		// mapState(模块名, ['字段名','字段名','字段名'])
-		...mapState('search', ['msg'])
+		...mapState('search', ['searchData'])
 	},
 	created() {
 		this.loadDefaultText();
@@ -75,8 +70,6 @@ export default {
 		async loadDefaultText() {
 			const { data } = await DefaultText();
 			this.defaultText = data.defaultText;
-			let res = this.$store.state.search.msg;
-			console.log('res', res);
 		},
 		/**
 		 * 搜索内容
@@ -85,7 +78,7 @@ export default {
 			// 用户未输入文本，直接搜索时，使用推荐搜索文本
 			this.searchVal = val.length > 0 ? val : this.defaultText;
 			// 保存搜索历史数据
-			this.saveSearchData();
+			this.$store.commit('search/addSearchData', this.searchVal);
 			// 切换视图
 			if (this.searchVal) {
 				this.showType = SEARCH_RESULT;
@@ -94,15 +87,15 @@ export default {
 		/**
 		 * 保存搜索历史数据
 		 */
-		saveSearchData() {
-			// 1. 如果数据已存在，则删除
-			const index = this.searchData.findIndex(item => item === this.searchVal);
-			if (index > -1) {
-				this.searchData.splice(index, 1);
-			}
-			// 2. 新的搜索内容需要先于旧的搜索内容展示
-			this.searchData.unshift(this.searchVal);
-		},
+		// saveSearchData() {
+		// 	// 1. 如果数据已存在，则删除
+		// 	const index = this.searchData.findIndex(item => item === this.searchVal);
+		// 	if (index > -1) {
+		// 		this.searchData.splice(index, 1);
+		// 	}
+		// 	// 2. 新的搜索内容需要先于旧的搜索内容展示
+		// 	this.searchData.unshift(this.searchVal);
+		// },
 		/**
 		 * searchbar 获取焦点
 		 */
@@ -149,6 +142,12 @@ export default {
 		top: 0px;
 		z-index: 9;
 		padding: 5px;
+		height: 50px;
+		background: #fff;
+		box-shadow: 2px 2px 5px 1px rgba(143, 143, 143, 0.1);
+	}
+	.search-hot-list-box {
+		margin-top: 20px;
 	}
 }
 </style>

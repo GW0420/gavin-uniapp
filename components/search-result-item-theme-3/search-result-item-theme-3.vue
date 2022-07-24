@@ -1,0 +1,80 @@
+<template>
+	<view class="search-result-item-box">
+		<!-- 标题 -->
+		<rich-text :nodes="data.title" class="item-title line-clamp-2"></rich-text>
+		<!-- 内容区 - 样式 3 -->
+		<view class="item-info-img-box">
+			<image v-for="item in data.pic_list" :key="item" class="item-img" :src="item" />
+		</view>
+		<!-- 底部 -->
+		<view class="item-desc-bottom">
+			<view class="item-author">{{ data.nickname }}</view>
+			<view class="item-read-num">
+				<uni-icons class="read-num-icon" color="#999999" type="compose" />
+				<text>{{ data.create_time }}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	props: {
+		data: {
+			type: Object,
+			required: true
+		}
+	},
+	data: () => ({}),
+	created() {
+		if (this.data.pic_list.length > 3) {
+			this.data.pic_list = this.data.pic_list.splice(0, 2);
+		}
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.search-result-item-box {
+	padding: 12px;
+	box-shadow: 2px 2px 5px 1px rgba(143, 143, 143, 0.1);
+
+	// 标题
+	.item-title {
+		font-size: 14px;
+		font-weight: bold;
+		color: #000;
+	}
+
+	.item-info-img-box {
+		display: flex;
+		margin: 15px 0;
+		// 图片
+		.item-img {
+			width: 33%;
+			height: 70px;
+			box-sizing: border-box;
+		}
+		.item-img:nth-child(1n + 1) {
+			margin-right: 10px;
+		}
+	}
+
+	// 底部作者 + 阅读量
+	.item-desc-bottom {
+		margin-top: 8px;
+		display: flex;
+		color: #999;
+		font-size: 12px;
+		.item-author {
+			margin-right: 12px;
+		}
+		.item-read-num {
+			.read-num-icon {
+				color: #999;
+				margin-right: 5px;
+			}
+		}
+	}
+}
+</style>

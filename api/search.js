@@ -16,3 +16,13 @@ export function SearchHotList() {
 		url: '/search/hot-list'
 	});
 }
+
+/**
+ * 搜索结果
+ */
+export function SearchResult(data) {
+	return request({
+		url: '/search',
+		data
+	});
+}

@@ -12,9 +12,9 @@
 		<!-- 内容区域 -->
 		<view class="search-history-box">
 			<block v-for="(item, index) in searchData" :key="index">
-				<view class="search-history-item">
+				<view class="search-history-item" @click="onHistoryItemClick(item, index)">
 					<text class="history-txt line-clamp">{{ item }}</text>
-					<uni-icons v-show="isShowClear" type="clear" @click="onHistoryItemClick(item, index)" />
+					<uni-icons v-show="isShowClear" type="clear" />
 				</view>
 			</block>
 		</view>
@@ -45,7 +45,8 @@ export default {
 				success: ({ confirm, cancel }) => {
 					if (confirm) {
 						// 删除 searchData
-						this.$emit('removeAllSearchData');
+						// this.$emit('removeAllSearchData');
+						this.$store.commit('search/removeAllSearchData');
 						// 返回状态
 						this.isShowClear = false;
 					}
@@ -55,7 +56,8 @@ export default {
 		onHistoryItemClick(item, index) {
 			if (this.isShowClear) {
 				// 删除指定的 searchData
-				this.$emit('removeSearchData', index);
+				// this.$emit('removeSearchData', index);
+				this.$store.commit('search/removeSearchData', index);
 			} else {
 				this.$emit('onItemClick', item);
 			}

@@ -53,7 +53,7 @@ export default {
 		color: #ff0000;
 		padding: 12px;
 		margin: -12px -12px 12px -12px;
-		box-shadow: 2px 2px 5px 1px rgba(143, 143, 143, 0.1);
+		// box-shadow: 2px 2px 5px 1px rgba(143, 143, 143, 0.1);
 	}
 	.search-hot-item {
 		display: flex;

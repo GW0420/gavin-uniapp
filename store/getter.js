@@ -1,5 +1,5 @@
 const getters = {
-	search: state => state.search.msg
+	searchData: state => state.search.searchData
 }
 
 export default getters
