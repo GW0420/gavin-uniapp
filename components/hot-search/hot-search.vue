@@ -7,7 +7,7 @@
 			:radius="100"
 			:bgColor="config.backgroundColor"
 			:placeholder="placeholderText"
-			:value="searchVal"
+			v-model="newVal"
 			@confirm="onSearch"
 			@focus="onFocus"
 			@blur="onBlur"
@@ -56,14 +56,16 @@ export default {
 		}
 	},
 	data() {
-		return {};
+		return {
+			newVal: ''
+		};
 	},
 	methods: {
 		/**
 		 * 点击搜索按钮触发
 		 */
 		onSearch() {
-			this.$emit('search', this.searchVal);
+			this.$emit('search', this.newVal);
 		},
 		/**
 		 * 输入框获取焦点触发
@@ -94,6 +96,13 @@ export default {
 		 */
 		onInput(val) {
 			this.$emit('input', val);
+		}
+	},
+	watch: {
+		searchVal: {
+			handler(val) {
+				this.newVal = val;
+			}
 		}
 	}
 };

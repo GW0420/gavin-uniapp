@@ -3,7 +3,7 @@
 		<!-- search模块 -->
 		<view class="search-bar-box">
 			<hot-search
-				v-model:searchVal="searchVal"
+				:searchVal="searchVal"
 				:isShowInput="true"
 				:config="{
 					backgroundColor: '#f1f0f3'
@@ -23,7 +23,12 @@
 		</view>
 		<!-- 搜索历史 -->
 		<view class="search-history-box" v-else-if="showType === SEARCH_HISTORY">
-			<search-history :searchData="searchData" />
+			<search-history
+				:searchData="searchData"
+				@removeAllSearchData="onRemoveAllSearchData"
+				@removeSearchData="onRemoveSearchData"
+				@onItemClick="onSearchConfirm"
+			/>
 		</view>
 		<!-- 搜索结果 -->
 		<view class="search-result-box" v-else><search-result-list /></view>
@@ -32,6 +37,8 @@
 
 <script>
 import { DefaultText } from '@/api/search.js';
+import { mapState } from 'vuex';
+
 const HOT_LIST = '0'; // 0: 热搜列表
 const SEARCH_HISTORY = '1'; // 1：搜索历史
 const SEARCH_RESULT = '2'; // 2： 搜索结果
@@ -53,6 +60,11 @@ export default {
 			searchData: []
 		};
 	},
+	computed: {
+		// 2. 在 computed 中，通过 mapState 函数，注册 state 中的数据，导入之后的数据可直接使用（就像使用 data 中的数据一样）
+		// mapState(模块名, ['字段名','字段名','字段名'])
+		...mapState('search', ['msg'])
+	},
 	created() {
 		this.loadDefaultText();
 	},
@@ -63,14 +75,15 @@ export default {
 		async loadDefaultText() {
 			const { data } = await DefaultText();
 			this.defaultText = data.defaultText;
+			let res = this.$store.state.search.msg;
+			console.log('res', res);
 		},
 		/**
 		 * 搜索内容
 		 */
-		onSearchConfirm() {
-			console.log('this.searchVal.length', this.searchVal.length);
+		onSearchConfirm(val) {
 			// 用户未输入文本，直接搜索时，使用推荐搜索文本
-			this.searchVal = this.searchVal.length > 0 ? this.searchVal : this.defaultText;
+			this.searchVal = val.length > 0 ? val : this.defaultText;
 			// 保存搜索历史数据
 			this.saveSearchData();
 			// 切换视图
@@ -115,7 +128,16 @@ export default {
 		/**
 		 *  value 改变时触发事件
 		 */
-		onSearchInput(val) {}
+		onSearchInput(val) {},
+		/**
+		 * 删除数据
+		 */
+		onRemoveSearchData(index) {
+			this.searchData.splice(index, 1);
+		},
+		onRemoveAllSearchData() {
+			this.searchData = [];
+		}
 	}
 };
 </script>

@@ -5,7 +5,7 @@
 			<view class="search-history-title">搜索历史</view>
 			<view v-if="!isShowClear"><uni-icons type="trash" @click="isShowClear = true" /></view>
 			<view v-else>
-				<text class="txt">全部删除</text>
+				<text class="txt" @click="onClearAll">全部删除</text>
 				<text class="txt" @click="isShowClear = false">完成</text>
 			</view>
 		</view>
@@ -14,7 +14,7 @@
 			<block v-for="(item, index) in searchData" :key="index">
 				<view class="search-history-item">
 					<text class="history-txt line-clamp">{{ item }}</text>
-					<uni-icons v-show="isShowClear" type="clear" />
+					<uni-icons v-show="isShowClear" type="clear" @click="onHistoryItemClick(item, index)" />
 				</view>
 			</block>
 		</view>
@@ -35,6 +35,31 @@ export default {
 			isShowClear: false
 			// searchData: ['sunday', 'uniapp', 'vue', '前端']
 		};
+	},
+	methods: {
+		onClearAll() {
+			uni.showModal({
+				title: '提示',
+				content: '删除搜索历史记录？',
+				showCancel: true,
+				success: ({ confirm, cancel }) => {
+					if (confirm) {
+						// 删除 searchData
+						this.$emit('removeAllSearchData');
+						// 返回状态
+						this.isShowClear = false;
+					}
+				}
+			});
+		},
+		onHistoryItemClick(item, index) {
+			if (this.isShowClear) {
+				// 删除指定的 searchData
+				this.$emit('removeSearchData', index);
+			} else {
+				this.$emit('onItemClick', item);
+			}
+		}
 	}
 };
 </script>
