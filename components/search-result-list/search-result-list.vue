@@ -1,27 +1,35 @@
 <template>
 	<view class="search-result-list-container">
-		<!-- 循环渲染列表数据 -->
-		<block v-for="(item, index) in resultList" :key="index">
-			<view class="search-result-item-box">
-				<!-- 内容区 - 样式 1 -->
-				<search-result-item-theme-1 v-if="!item.pic_list || item.pic_list.length === 0" :data="item" />
+		<!-- 1. 通过 mescroll-body 包裹列表，指定 ref 为 mescrollRef ，监听@init、@down、@up 事件 -->
+		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
+			<!-- 循环渲染列表数据 -->
+			<block v-for="(item, index) in resultList" :key="index">
+				<view class="search-result-item-box">
+					<!-- 内容区 - 样式 1 -->
+					<search-result-item-theme-1 v-if="!item.pic_list || item.pic_list.length === 0" :data="item" />
 
-				<!-- 内容区 - 样式 2 -->
-				<search-result-item-theme-2 v-else-if="item.pic_list.length === 1" :data="item" />
+					<!-- 内容区 - 样式 2 -->
+					<search-result-item-theme-2 v-else-if="item.pic_list.length === 1" :data="item" />
 
-				<!-- 内容区 - 样式 3 -->
-				<search-result-item-theme-3 v-else :data="item" />
+					<!-- 内容区 - 样式 3 -->
+					<search-result-item-theme-3 v-else :data="item" />
 
-				<!-- / -->
-			</view>
-		</block>
+					<!-- / -->
+				</view>
+			</block>
+		</mescroll-body>
 	</view>
 </template>
 
 <script>
 import { SearchResult } from 'api/search';
+// 2. 导入对应的 mixins
+import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js';
+
 export default {
 	name: 'search-result-list',
+	// 3. 注册 mixins
+	mixins: [MescrollMixin],
 	props: {
 		// 搜索关键字
 		queryStr: {
@@ -34,12 +42,16 @@ export default {
 			// 数据源
 			resultList: [],
 			// 页数
-			page: 1
+			page: 1,
+			// 实例
+			mescroll: null,
+			// 处理渲染，会回调 down和up 方法，为了避免该问题，定义 init 变量，表示当前是否为首次请求
+			isInit: true
 		};
 	},
-	created() {
-		this.loadSearchResult();
-	},
+	// created() {
+	// 	this.loadSearchResult();
+	// },
 	methods: {
 		/**
 		 * 获取搜索数据
@@ -48,6 +60,52 @@ export default {
 			let params = { q: this.queryStr, p: this.page };
 			const { data } = await SearchResult(params);
 			this.resultList = data.list;
+			// 更改返回数据样式（行内样式）
+			data.list.forEach(item => {
+				item.title = item.title.replace(/<em>/g, "<em style='color:#f94d2a; margin:0 2px'>");
+				item.description = item.description.replace(/<em>/g, "<em style='color:#f94d2a; margin:0 2px'>");
+			});
+			// 使用下拉刷新上拉加载的赋值策略
+			// this.resultList = data.list;
+			// 判断是否为第一页数据
+			if (this.page === 1) {
+				this.resultList = data.list;
+			} else {
+				this.resultList = [...this.resultList, ...data.list];
+			}
+		},
+		// 4. 实现三个回调方法
+		/**
+		 * 首次加载
+		 */
+		async mescrollInit() {
+			console.log('mescrollInit');
+			await this.loadSearchResult();
+			this.isInit = false;
+			// 结束 上拉加载 && 下拉刷新
+			this.mescroll.endSuccess();
+		},
+		/**
+		 * 下拉刷新的回调
+		 */
+		async downCallback() {
+			console.log('downCallback');
+			if (this.isInit) return;
+			this.page = 1;
+			await this.loadSearchResult();
+			// 结束 上拉加载 && 下拉刷新
+			this.mescroll.endSuccess();
+		},
+		/**
+		 * 上拉加载的回调
+		 */
+		async upCallback() {
+			console.log('upCallback');
+			if (this.isInit) return;
+			this.page += 1;
+			await this.loadSearchResult();
+			// 结束 上拉加载 && 下拉刷新
+			this.mescroll.endSuccess();
 		}
 	}
 };

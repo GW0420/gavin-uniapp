@@ -9,7 +9,7 @@
 			<view class="item-author">{{ data.author }}</view>
 			<view class="item-read-num">
 				<uni-icons class="read-num-icon" color="#999999" type="compose" />
-				<text>{{ data.create_time }}</text>
+				<text>{{ $relativeTime(data.create_time) }}</text>
 			</view>
 		</view>
 	</view>

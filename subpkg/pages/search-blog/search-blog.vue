@@ -26,19 +26,26 @@
 			<search-history :searchData="searchData" @onItemClick="onSearchConfirm" />
 		</view>
 		<!-- 搜索结果 -->
-		<view class="search-result-box" v-else><search-result-list :queryStr="searchVal" /></view>
+		<view class="search-result-box" v-else>
+			<!-- 1. 给mescroll-body的组件添加: ref="mescrollItem" (固定的,不可改,与mescroll-comp.js对应)-->
+			<search-result-list ref="mescrollItem" :queryStr="searchVal" />
+		</view>
 	</view>
 </template>
 
 <script>
 import { DefaultText } from '@/api/search.js';
 import { mapState } from 'vuex';
+// 2. 引入mescroll-comp.js
+import MescrollCompMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mixins/mescroll-comp.js';
 
 const HOT_LIST = '0'; // 0: 热搜列表
 const SEARCH_HISTORY = '1'; // 1：搜索历史
 const SEARCH_RESULT = '2'; // 2： 搜索结果
 
 export default {
+	// 3. 注册 mixins
+	mixins: [MescrollCompMixin],
 	data() {
 		return {
 			// 绑定输入框中的内容
