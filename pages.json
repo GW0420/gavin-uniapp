@@ -26,12 +26,21 @@
 		"root": "subpkg",
 		"name": "sub-1",
 		"pages": [{
-			"path": "pages/search-blog/search-blog",
-			"style": {
-				"navigationBarTitleText": "慕课热搜",
-				"enablePullDownRefresh": false
+				"path": "pages/search-blog/search-blog",
+				"style": {
+					"navigationBarTitleText": "慕课热搜",
+					"enablePullDownRefresh": false
+				}
+			},
+			{
+				"path": "pages/blog-detail/blog-detail",
+				"style": {
+					"navigationBarTitleText": "文章详情",
+					"enablePullDownRefresh": false
+				}
+
 			}
-		}]
+		]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

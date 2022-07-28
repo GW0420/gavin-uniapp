@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'search-list';
+const HISTORY_MAX = 10;
 
 export default {
 	// 独立命名空间
@@ -28,6 +29,13 @@ export default {
 				state.searchData.splice(index, 1);
 			}
 			state.searchData.unshift(val);
+
+			// 判断是否超过了最大缓存数量
+			console.log(state.searchData.length);
+			if (state.searchData.length > HISTORY_MAX) {
+				state.searchData.splice(HISTORY_MAX - 1, state.searchData.length - HISTORY_MAX);
+			}
+
 			// 调用 saveToStorage
 			this.commit('search/saveToStorage');
 		},

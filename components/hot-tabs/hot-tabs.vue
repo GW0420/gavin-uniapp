@@ -99,7 +99,7 @@ export default {
 				left: this.tabList[activeIndex]._slider.left
 			};
 			// 控制scrollView 进行横向的滚动
-			this.scrollLeft = this.activeIndex * this.defaultConfig.underLineWidth;
+			this.scrollLeft = activeIndex * underLineWidth;
 		},
 		// 更新 tab item 的宽度
 		updateTabWidth() {

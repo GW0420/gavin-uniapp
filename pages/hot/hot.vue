@@ -33,6 +33,7 @@
 							:key="index"
 							:data="item"
 							:ranking="index + 1"
+							@click="onItemClick(item)"
 						></hot-list-item>
 					</block>
 				</view>
@@ -139,6 +140,12 @@ export default {
 		onToSearch() {
 			uni.navigateTo({
 				url: '/subpkg/pages/search-blog/search-blog'
+			});
+		},
+		// 跳转至文章详情页
+		onItemClick(item) {
+			uni.navigateTo({
+				url: `/subpkg/pages/blog-detail/blog-detail?author=${item.user_name}&articleId=${item.id}`
 			});
 		}
 	}
